@@ -9,8 +9,8 @@ RM = -rm -f
 
 all: tp1.exe
 	
-tp1.exe: main.o cmdline.o complejo.o ft.o proc.o cmdline.h complejo.h ft.o proc.h 
-	$(CXX) $(CXXFLAGS) -o tp1.exe main.o cmdline.o complejo.o ft.o proc.o
+tp1.exe: main.o cmdline.o complejo.o ft.h proc.o cmdline.h complejo.h proc.h 
+	$(CXX) $(CXXFLAGS) -o tp1.exe main.o cmdline.o complejo.o proc.o
 
 
 # Declaración de targets de objetos para tp0
@@ -26,9 +26,9 @@ complejo.o: complejo.cc
 	$(CXX) $(CXXFLAGS) -c -o complejo.o complejo.cc
 complejo.cc: complejo.h
 
-ft.o: ft.cc
-	$(CXX) $(CXXFLAGS) -c -o ft.o ft.cc
-ft.cc: ft.h
+#ft.o: ft.cc
+#	$(CXX) $(CXXFLAGS) -c -o ft.o ft.cc
+#ft.cc: ft.h
 
 proc.o: proc.cc
 	$(CXX) $(CXXFLAGS) -c -o proc.o proc.cc
@@ -36,6 +36,15 @@ proc.cc: proc.h complejo.h
 
 # Testing
 # ¡Hacer las pruebas del enunciado y usar valgrind!
+test: tp1.exe test1
+
+test1: 
+	@echo **TEST 1**(Empty file)	
+	touch test1.txt			
+	if(./tp1.exe -i test1.txt)	\
+		@echo **TEST 1 OK**	\
+	else				\
+		@echo **TEST 1 FAILED**	
 
 # Cleaning target
 

@@ -7,29 +7,30 @@
 //
 // Asímismo, se deben definir las clases "hijas" como DFT y FFT.
 
+#include <string>
 
 class ft 
 {
 	public:
-		virtual void calc()=0
+		virtual void calc();
 
-}
+};
 
 
 
 class dft : public ft
 {
 	public:
-		void calc()
-}
+		void calc();
+};
 
 
 
 class fft : public ft
 {
 	public:
-		void calc()
+		void calc();
 
-}
+};
 
 #endif

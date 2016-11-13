@@ -1,5 +1,5 @@
-#ifndef _AM_PROC_H_INCLUDED_
-#define _AM_PROC_H_INCLUDED_
+#ifndef _PROC_H_INCLUDED_
+#define _PROC_H_INCLUDED_
 
 #include <iostream>
 

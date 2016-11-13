@@ -6,9 +6,16 @@
 
 using namespace std;
 
+ftt::ftt(){
+}
+
+~ftt:ftt(){
+}
+
 void fft::calc(){
 	// calculo
 }
+
 
 void dft::calc(){
 	// calculo
