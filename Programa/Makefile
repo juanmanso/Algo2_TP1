@@ -7,7 +7,7 @@ CXXFLAGS = $(DIR_INCLUDE) $(CXXARGS)
 RM = -rm -f
 
 
-all: tp1.exe
+all: tp1.exe 
 	
 tp1.exe: main.o cmdline.o complejo.o ft.h proc.o cmdline.h complejo.h proc.h 
 	$(CXX) $(CXXFLAGS) -o tp1.exe main.o cmdline.o complejo.o proc.o
@@ -38,16 +38,39 @@ proc.cc: proc.h complejo.h
 # ¡Hacer las pruebas del enunciado y usar valgrind!
 test: tp1.exe test1
 
-test1: 
-	@echo **TEST 1**(Empty file)	
-	touch test1.txt			
-	if(./tp1.exe -i test1.txt)	\
-		@echo **TEST 1 OK**	\
-	else				\
-		@echo **TEST 1 FAILED**	
+# Empty file test
+test1:
+	@set -e; echo **TEST 1** - Empty file;		\
+	touch test1.in;					\
+	./tp1.exe -i test1.in -o test1.out;		\
+	if (diff -b test1.out test1.in); 		\
+	then	echo **TEST 1 OK**;			\
+	else	echo **TEST 1 FAILED**;			\
+	fi											
+	@rm test1.*;			
 
-# Cleaning target
+# Filling with ceros test
+test2:
+	@set -e; echo **TEST 2** - Filling with ceros;		\
+	echo 1 1 > test2.in;					\
+	echo (1,0) (1,0) (0,0) (0,0) > test2.ref;		\
+	./tp1.exe -i test2.in -o test2.out -b 2;		\
+	if (diff -b test2.out test2.ref); 			\
+	then	echo **TEST 2 OK**;				\
+	else	echo **TEST 2 FAILED**;				\
+	fi											
+	@rm test2.*;			
+
+################## END TESTING #######################
+
+
+
+# Cleaning targets
 
 .PHONY: clean
 clean:
 	$(RM) -vf *.o *.exe *.t *.out *.err .*.swp
+
+.PHONY: partial_cleaning
+partial_cleaning:
+	$(RM) -f *.o .*.swp	
