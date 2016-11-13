@@ -6,14 +6,18 @@
 #include <cstdlib>
 
 #include "cmdline.h"
+#include "complejo.h"
 #include "ft.h"
-
+#include "proc.h"
 
 using namespace std;
 
 static void opt_input(string const &);
 static void opt_output(string const &);
-static void opt_ft(string const &);
+static void opt_forward-op(string const &);
+static void opt_reverse-op(string const &);
+static void opt_block-shift(string const &);
+static void opt_taps(string const &);
 
 // Tabla de opciones de línea de comando. El formato de la tabla
 // consta de un elemento por cada opción a definir. A su vez, en
@@ -46,12 +50,14 @@ static void opt_ft(string const &);
 static option_t options[] = {
 	{1, "i", "input", "-", opt_input, OPT_DEFAULT},
 	{1, "o", "output", "-", opt_output, OPT_DEFAULT},
-	{1, "N", "ft","fft",opt_n_decimator, OPT_DEFAULT},
+	{1, "f", "forward-op","fft",opt_forward-op, OPT_DEFAULT},
+	{1, "r", "reverse-op","ifft",opt_reverse-op, OPT_DEFAULT},
+	{1, "b", "block-shift","0",opt_block-shift, OPT_DEFAULT},
+	{1, "t", "taps","1",opt_taps, OPT_DEFAULT},
 	{0, "h", "help", NULL, opt_help, OPT_DEFAULT},
 	{0, },
 };
 
-static string n_decimator;	// Fourier Transform Method (método de cálculo de ft)
 static istream *iss = 0;	// Input Stream (clase para manejo de los flujos de entrada)
 static ostream *oss = 0;	// Output Stream (clase para manejo de los flujos de salida)
 static fstream ifs; 		// Input File Stream (derivada de la clase ifstream que deriva de istream para el manejo de archivos)
@@ -60,8 +66,11 @@ static fstream ofs;		// Output File Stream (derivada de la clase ofstream que de
 
 #define POS_I_OPT 0
 #define POS_O_OPT 1
-#define POS_FT_OPT 2
-#define POS_HELP_OPT 3
+#define POS_F_OPT 2
+#define POS_R_OPT 3
+#define POS_B_OPT 4
+#define POS_T_OPT 5
+#define POS_HELP_OPT 6
 
 
 
@@ -122,7 +131,7 @@ opt_output(string const &arg)
 }
 
 static void
-opt_ft(string const &arg)
+opt_forward-op(string const &arg)
 {
 	istringstream iss(arg);
 
@@ -147,7 +156,7 @@ opt_ft(string const &arg)
 static void
 opt_help(string const &arg)
 {
-	cout << "tp1 [-ft ft_method] [-i file] [-o file]"
+	cout << "tp1 [-i file] [-o file] [-f ft_method] [-r ift_method] [-b block-shift] [-t taps]"
 	     << endl;
 	exit(0);
 }
@@ -159,5 +168,5 @@ main(int argc, char * const argv[])
 {
 	cmdline cmdl(options);	// Objeto con parametro tipo option_t (struct) declarado globalmente.
 	cmdl.parse(argc, argv);	// Metodo de parseo de la clase cmdline
-	ft(iss, oss);	// Cálculo de la transformada
+	proc(iss, oss);	// Procesamiento de la señal
 }
