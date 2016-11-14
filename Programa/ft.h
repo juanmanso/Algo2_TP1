@@ -9,11 +9,19 @@
 
 #include <string>
 
+using namespace std;
+
+#define AMOUNT_OF_F_METHODS 6
+#define AMOUNT_OF_R_METHODS 2
+
+static string FT_FLAGS[AMOUNT_OF_F_METHODS]={"dft","idft","fft","ifft","fft-iter","ifft-iter"};
+static string IFT_FLAGS[AMOUNT_OF_R_METHODS]={"idft","ifft"};
+
+
 class ft 
 {
 	public:
-		virtual void calc();
-
+		virtual void calc()=0;
 };
 
 
@@ -21,7 +29,26 @@ class ft
 class dft : public ft
 {
 	public:
-		void calc();
+		virtual void calc()
+		{
+		       	cout<<"dft"<<endl;
+		}
+		dft(){}
+		~dft(){}
+};
+
+
+
+class idft : public ft
+{
+	public:
+		virtual void calc()
+		{
+		       	cout<<"idft"<<endl;
+		}
+
+		idft(){}
+		~idft(){}
 };
 
 
@@ -29,8 +56,14 @@ class dft : public ft
 class fft : public ft
 {
 	public:
-		void calc();
+		virtual void calc()
+		{
+		       	cout<<"fft"<<endl;
+		}
+		fft(){}
+		~fft(){}
 
 };
+
 
 #endif

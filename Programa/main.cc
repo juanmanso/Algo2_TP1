@@ -4,6 +4,9 @@
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
+#include <vector>
+#include <string>
+#include <cmath>
 
 #include "cmdline.h"
 #include "complejo.h"
@@ -63,7 +66,10 @@ static istream *iss = 0;	// Input Stream (clase para manejo de los flujos de ent
 static ostream *oss = 0;	// Output Stream (clase para manejo de los flujos de salida)
 static fstream ifs; 		// Input File Stream (derivada de la clase ifstream que deriva de istream para el manejo de archivos)
 static fstream ofs;		// Output File Stream (derivada de la clase ofstream que deriva de ostream para el manejo de archivos)
-
+static ft* ft_method;		// Computing Method
+static ft* ift_method;		// Syntesis Method
+static unsigned int s_length;		// Size of the Block Shift
+static vector<complejo> taps;
 
 #define POS_I_OPT 0
 #define POS_O_OPT 1
@@ -126,7 +132,7 @@ opt_output(string const &arg)
 		cerr << "cannot open "
 		     << arg
 		     << "."
-	     << endl;
+		     << endl;
 		exit(1);		// EXIT: Terminación del programa en su totalidad
 	}
 }
@@ -134,40 +140,171 @@ opt_output(string const &arg)
 static void
 opt_forward_op(string const &arg)
 {
-//	istringstream iss(arg);
+	istringstream iss(arg);
+	string aux;
+	size_t i;
 
-// Hacer la función
+	if(!(iss >> aux) || !iss.eof()) {
+		cerr << "non-string argument: "
+		     << arg
+		     << "."
+		     << endl;
+		exit(1);
+	}
 
-//	if(!(iss >> ft_method) || !iss.eof()) {
-//		cerr << "non-integer factor: "
-//		     << arg
-//		     << "."
-//		     << endl;
-//		exit(1);
-//	}
-//
-//	if (iss.bad()) {
-//		cerr << "cannot read integer factor."
-//		     << endl;
-//		exit(1);
-//	}
+	if (iss.bad()) {
+		cerr << "cannot read forward-op."
+		     << endl;
+		exit(1);
+	}
+
+
+	if (arg == (options+POS_F_OPT)->def_value) {
+		cout << "FFT defecto" << endl;
+		//ft_method= (options+POS_F_OPT)->def_value;	
+	} 
+	
+	else { 
+		for(i=0; i<AMOUNT_OF_F_METHODS; i++){
+			if(FT_FLAGS[i]==aux){
+				cout << "FT = " << FT_FLAGS[i] << endl;
+//				*ft_method=FT_FLAGS[i];
+				break;
+			}
+		}
+
+		if(i==AMOUNT_OF_F_METHODS){
+			cerr << "invalid ft method: "
+			     << arg
+			     << "."
+			     << endl;
+			exit(1);
+		}
+	}
 }
 
 static void
 opt_reverse_op(string const &arg)
 {
+	istringstream iss(arg);
+	string aux;
+	size_t i;
+
+	if(!(iss >> aux) || !iss.eof()) {
+		cerr << "non-string argument: "
+		     << arg
+		     << "."
+		     << endl;
+		exit(1);
+	}
+
+	if (iss.bad()) {
+		cerr << "cannot read reverse-op."
+		     << endl;
+		exit(1);
+	}
+
+
+	if (arg == (options+POS_R_OPT)->def_value) {
+		cout << "IFFT defecto" << endl;
+		//ift_method= (options+POS_R_OPT)->def_value;	
+	} 
+	
+	else { 
+		for(i=0; i<AMOUNT_OF_R_METHODS; i++){
+			if(IFT_FLAGS[i]==aux){
+				cout << "IFT = " << IFT_FLAGS[i] << endl;
+//				*ift_method=IFT_FLAGS[i];
+				break;
+			}
+		}
+
+		if(i==AMOUNT_OF_R_METHODS){
+			cerr << "invalid ift method: "
+			     << arg
+			     << "."
+			     << endl;
+			exit(1);
+		}
+	}
 }
 
 static void
 opt_block_shift(string const &arg)
 {
+	istringstream iss(arg);
+	int aux;
+
+	// Se extrae el 's' de la línea de comandos.
+	// Para detectar argumentos que únicamente consistan de
+	// números enteros positivos, se verifica que EOF llegue
+	// justo después de la lectura exitosa del escalar.
+	// A traves del uso de un 'int' auxiliar, se verifica el signo
+	
+	if(!(iss >> aux) || !iss.eof() || aux<0) {
+		cerr << "non-positive integer number: "
+		     << arg
+		     << "."
+		     << endl;
+		exit(1);
+	}
+
+	if (iss.bad()) {
+		cerr << "cannot read block-shift number."
+		     << endl;
+		exit(1);
+	}
+
+	s_length=aux;
 }
 
 static void
 opt_taps(string const &arg)
 {
-}
+	size_t i;
+	fstream aux_fs;
+	complejo aux_c;
 
+	// Si el nombre argumento es igual al argumento por
+	// defecto, entonces se crea un vector unitario de
+	// longitud 'pow(2,s_length)'.
+	// De lo contrario, se requiere que el argumento sea
+	// un archivo que contenga los 'pow(2,s_length)'
+	// coeficientes necesarios y se crea dicho vector.
+	//
+	if (arg == (options+POS_T_OPT)->def_value) {
+		taps.resize(pow(2,s_length));
+		for(i=0; i<taps.size(); i++){
+			taps[i]=1;
+			cout << taps[i] << endl;
+		}
+	} 
+	else {
+		aux_fs.open(arg.c_str(), ios::in);
+		taps.resize(pow(2,s_length));
+		for(i=0; i<taps.size(); i++){
+			if(!(aux_fs >> aux_c) || aux_fs.eof()){
+				cerr << "cannot read taps file "
+				     << arg
+				     << "."
+				     << endl;
+				exit(1);
+			}
+			else
+				taps[i]=aux_c;
+		}
+	}
+
+	// Verificamos que el stream este OK.
+	//
+	if (!aux_fs.good()) {
+		cerr << "cannot open "
+		     << arg
+		     << "."
+		     << endl;
+		exit(1);		// EXIT: Terminación del programa en su totalidad
+	}
+}
 
 static void
 opt_help(string const &arg)
@@ -184,5 +321,5 @@ main(int argc, char * const argv[])
 {
 	cmdline cmdl(options);	// Objeto con parametro tipo option_t (struct) declarado globalmente.
 	cmdl.parse(argc, argv);	// Metodo de parseo de la clase cmdline
-	proc(iss, oss, 2);	// Procesamiento de la señal
+	proc(iss, oss, s_length);	// Procesamiento de la señal
 }
