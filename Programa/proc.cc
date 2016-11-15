@@ -12,7 +12,7 @@ using namespace std;
 // En el nivel más alto de abstracción del programa
 // el sistema es la función entera
 void
-proc(istream *is, ostream *os, const size_t& s){
+proc(istream *is, ostream *os, const size_t &s_length, const vector<complejo> &taps, const ft_flag_t &ft_flag, const ift_flag_t &ift_flag){
 	
 	// En el nivel intermedio de abstracción
 	// el sistema consta de 5 subsistemas
@@ -21,6 +21,12 @@ proc(istream *is, ostream *os, const size_t& s){
 	// Luego el nivel más bajo de abstracción
 	// es la implementación de cada función
 
+	// Se estrablecen los métodos para transformar
+	ft* ft_method;
+	ft* ift_method;
+
+	ft_method=ft_method->get_f_method(ft_flag);
+	ift_method=ift_method->get_r_method(ift_flag);
 
 
 	// VECTORIZAR LA ENTRADA
@@ -31,7 +37,7 @@ proc(istream *is, ostream *os, const size_t& s){
 	// Por lo tanto, se propone un while que agarre la entrada,
 	// vectorice y realize todo el cálculo dentro del while.
 
-	vector<complejo> array(pow(2,s));	// Vector de complejos (0's) con largo pow(2,s)
+	vector<complejo> array(pow(2,s_length));// Vector de complejos (0's) con largo pow(2,s)
 	complejo aux;				// Variable auxiliar para captura
 	size_t i;				// Variable para iterar el for
 	bool eof_flag=false;	
@@ -64,16 +70,22 @@ proc(istream *is, ostream *os, const size_t& s){
 
 	// TRANSFORMAR LOS VECTORES
 	
+		ft_method->calc(array);
+
 
 	// ECUALIZAR LA SEÑAL (multiplicación de los coefs por los coefs de la eq)
 
+		for(i=0; i<array.size(); i++)
+			array[i]=array[i]*taps[i];
 
 	// ANTITRANSFORMAR LA SEÑAL
 
+		ift_method->calc(array);
 
 	// IMPRIMIR SEÑAL RESULTANTE
 	//
 		for(i=0; i<array.size() && ((*os)<<array[i]<<endl); i++)
+			array[i]=0;
 		
 		if(os->bad()){
 			cerr	<< "Error: Cannot write output file"
@@ -81,4 +93,7 @@ proc(istream *is, ostream *os, const size_t& s){
 			exit(1);
 		}
 	}
+
+	delete ft_method;
+	delete ift_method;
 }

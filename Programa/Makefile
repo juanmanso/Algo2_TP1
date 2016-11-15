@@ -9,14 +9,14 @@ RM = -rm -f
 
 all: tp1.exe 
 	
-tp1.exe: main.o cmdline.o complejo.o ft.h proc.o cmdline.h complejo.h proc.h 
-	$(CXX) $(CXXFLAGS) -o tp1.exe main.o cmdline.o complejo.o proc.o
+tp1.exe: main.o cmdline.o complejo.o ft.o proc.o cmdline.h complejo.h ft.h proc.h 
+	$(CXX) $(CXXFLAGS) -o tp1.exe main.o cmdline.o complejo.o ft.o proc.o
 
 
 # Declaración de targets de objetos para tp0
 main.o: main.cc
 	$(CXX) $(CXXFLAGS) -c -o main.o main.cc
-main.cc: cmdline.h complejo.h ft.h proc.h
+main.cc: cmdline.h complejo.h ft.h proc.h 
 
 cmdline.o: cmdline.cc
 	$(CXX) $(CXXFLAGS) -c -o cmdline.o cmdline.cc
@@ -26,13 +26,13 @@ complejo.o: complejo.cc
 	$(CXX) $(CXXFLAGS) -c -o complejo.o complejo.cc
 complejo.cc: complejo.h
 
-#ft.o: ft.cc
-#	$(CXX) $(CXXFLAGS) -c -o ft.o ft.cc
-#ft.cc: ft.h
+ft.o: ft.cc
+	$(CXX) $(CXXFLAGS) -c -o ft.o ft.cc
+ft.cc: ft.h
 
 proc.o: proc.cc
 	$(CXX) $(CXXFLAGS) -c -o proc.o proc.cc
-proc.cc: proc.h complejo.h 
+proc.cc: proc.h complejo.h ft.h
 
 # Testing
 # ¡Hacer las pruebas del enunciado y usar valgrind!
@@ -69,8 +69,8 @@ test2:
 
 .PHONY: clean
 clean:
-	$(RM) -vf *.o *.exe *.t *.out *.err .*.swp
+	$(RM) -v *.o *.exe *.t *.out *.err .*.swp
 
 .PHONY: partial_cleaning
 partial_cleaning:
-	$(RM) -f *.o .*.swp	
+	$(RM) *.o .*.swp	

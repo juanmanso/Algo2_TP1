@@ -6,7 +6,7 @@
 using namespace std;
 
 void
-proc(istream *, ostream *, const size_t&);
+proc(istream *, ostream *, const size_t&, const vector<complejo>&, const ft_flag_t&, const ift_flag_t&);
 
 
 #endif

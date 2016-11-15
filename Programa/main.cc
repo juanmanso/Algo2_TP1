@@ -15,13 +15,13 @@
 
 using namespace std;
 
-static void opt_input(string const &);
-static void opt_output(string const &);
-static void opt_forward_op(string const &);
-static void opt_reverse_op(string const &);
-static void opt_block_shift(string const &);
-static void opt_taps(string const &);
-static void opt_help(string const &);
+static void opt_input(string const &);		// Setea el flujo de entrada
+static void opt_output(string const &);		// Setea el flujo de salida
+static void opt_forward_op(string const &);	// Determina el flag de FT
+static void opt_reverse_op(string const &);	// Determina el flag de IFT
+static void opt_block_shift(string const &);	// Setea el valor de s_length
+static void opt_taps(string const &);		// Completa el vector taps
+static void opt_help(string const &);		// Imprime las ayudas
 
 // Tabla de opciones de línea de comando. El formato de la tabla
 // consta de un elemento por cada opción a definir. A su vez, en
@@ -66,10 +66,10 @@ static istream *iss = 0;	// Input Stream (clase para manejo de los flujos de ent
 static ostream *oss = 0;	// Output Stream (clase para manejo de los flujos de salida)
 static fstream ifs; 		// Input File Stream (derivada de la clase ifstream que deriva de istream para el manejo de archivos)
 static fstream ofs;		// Output File Stream (derivada de la clase ofstream que deriva de ostream para el manejo de archivos)
-static ft* ft_method;		// Computing Method
-static ft* ift_method;		// Syntesis Method
-static unsigned int s_length;		// Size of the Block Shift
-static vector<complejo> taps;
+static ft_flag_t ft_flag;	// Flag of Computing Method
+static ift_flag_t ift_flag;	// Syntesis Method
+static size_t s_length;		// Size of the Block Shift
+static vector<complejo> taps;	// Vector with the EQ coeficients
 
 #define POS_I_OPT 0
 #define POS_O_OPT 1
@@ -144,6 +144,7 @@ opt_forward_op(string const &arg)
 	string aux;
 	size_t i;
 
+	// Se verifica que se pueda leer el argumento
 	if(!(iss >> aux) || !iss.eof()) {
 		cerr << "non-string argument: "
 		     << arg
@@ -158,17 +159,17 @@ opt_forward_op(string const &arg)
 		exit(1);
 	}
 
-
+	// Innecesario pero sólo lo pongo para chequear
 	if (arg == (options+POS_F_OPT)->def_value) {
 		cout << "FFT defecto" << endl;
-		//ft_method= (options+POS_F_OPT)->def_value;	
+		ft_flag=FT_FLAG_FFT;	
 	} 
 	
 	else { 
 		for(i=0; i<AMOUNT_OF_F_METHODS; i++){
 			if(FT_FLAGS[i]==aux){
 				cout << "FT = " << FT_FLAGS[i] << endl;
-//				*ft_method=FT_FLAGS[i];
+				ft_flag= static_cast<ft_flag_t>(i);
 				break;
 			}
 		}
@@ -205,16 +206,17 @@ opt_reverse_op(string const &arg)
 	}
 
 
+	// Innecesario pero sólo lo pongo para chequear
 	if (arg == (options+POS_R_OPT)->def_value) {
 		cout << "IFFT defecto" << endl;
-		//ift_method= (options+POS_R_OPT)->def_value;	
+		ift_flag=IFT_FLAG_IFFT;	
 	} 
 	
 	else { 
 		for(i=0; i<AMOUNT_OF_R_METHODS; i++){
 			if(IFT_FLAGS[i]==aux){
 				cout << "IFT = " << IFT_FLAGS[i] << endl;
-//				*ift_method=IFT_FLAGS[i];
+				ift_flag= static_cast<ift_flag_t> (i);
 				break;
 			}
 		}
@@ -268,20 +270,21 @@ opt_taps(string const &arg)
 	// Si el nombre argumento es igual al argumento por
 	// defecto, entonces se crea un vector unitario de
 	// longitud 'pow(2,s_length)'.
+	//
+	if (arg == (options+POS_T_OPT)->def_value) {
+		taps.resize(pow(2,s_length));
+		for(i=0; i<taps.size(); i++)
+			taps[i]=1;
+	} 
+
 	// De lo contrario, se requiere que el argumento sea
 	// un archivo que contenga los 'pow(2,s_length)'
 	// coeficientes necesarios y se crea dicho vector.
 	//
-	if (arg == (options+POS_T_OPT)->def_value) {
-		taps.resize(pow(2,s_length));
-		for(i=0; i<taps.size(); i++){
-			taps[i]=1;
-			cout << taps[i] << endl;
-		}
-	} 
 	else {
 		aux_fs.open(arg.c_str(), ios::in);
 		taps.resize(pow(2,s_length));
+
 		for(i=0; i<taps.size(); i++){
 			if(!(aux_fs >> aux_c) || aux_fs.eof()){
 				cerr << "cannot read taps file "
@@ -321,5 +324,5 @@ main(int argc, char * const argv[])
 {
 	cmdline cmdl(options);	// Objeto con parametro tipo option_t (struct) declarado globalmente.
 	cmdl.parse(argc, argv);	// Metodo de parseo de la clase cmdline
-	proc(iss, oss, s_length);	// Procesamiento de la señal
+	proc(iss, oss, s_length, taps, ft_flag, ift_flag);		// Procesamiento de la señal
 }
