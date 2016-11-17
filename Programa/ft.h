@@ -35,19 +35,13 @@ const static string IFT_FLAGS[AMOUNT_OF_R_METHODS]={"idft","ifft"};
 
 class ft 
 {
-	private:
-		ft* method_;
 	public:
-		virtual void calc(vector<complejo>)=0;
+		virtual void calc(vector<complejo>&)=0;
 		// Las siguientes funciones son llamadas
 		// por la función proc() que al finalizar
 		// llama al destructor.
 		ft* get_f_method(const ft_flag_t);
 		ft* get_r_method(const ift_flag_t);
-		/*
-		void delete_f_method();
-		void delete_r_method();
-		*/
 };
 
 
@@ -55,9 +49,9 @@ class ft
 class dft : public ft
 {
 	public:
-		virtual void calc(vector<complejo>)
+		virtual void calc(vector<complejo>&)
 		{
-		       	cout<<"dft"<<endl;
+		     	void dft_calc(vector<complejo>&) 
 		}
 		dft(){}
 		~dft(){}
@@ -68,7 +62,7 @@ class dft : public ft
 class idft : public ft
 {
 	public:
-		virtual void calc(vector<complejo>)
+		virtual void calc(vector<complejo>&)
 		{
 		       	cout<<"idft"<<endl;
 		}
@@ -82,7 +76,7 @@ class idft : public ft
 class fft : public ft
 {
 	public:
-		virtual void calc(vector<complejo>)
+		virtual void calc(vector<complejo>&)
 		{
 		       	cout<<"fft"<<endl;
 		}
@@ -95,7 +89,7 @@ class fft : public ft
 class ifft : public ft
 {
 	public:
-		virtual void calc(vector<complejo>)
+		virtual void calc(vector<complejo>&)
 		{
 		       	cout<<"ifft"<<endl;
 		}
@@ -107,7 +101,7 @@ class ifft : public ft
 class fft_iter : public ft
 {
 	public:
-		virtual void calc(vector<complejo>)
+		virtual void calc(vector<complejo>&)
 		{
 		       	cout<<"fft-iter"<<endl;
 		}
@@ -119,7 +113,7 @@ class fft_iter : public ft
 class ifft_iter : public ft
 {
 	public:
-		virtual void calc(vector<complejo>)
+		virtual void calc(vector<complejo>&)
 		{
 		       	cout<<"ifft-iter"<<endl;
 		}

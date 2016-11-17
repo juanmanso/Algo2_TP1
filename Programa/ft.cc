@@ -11,7 +11,7 @@ ft* ft::get_f_method(const ft_flag_t flag){
 
 	switch(flag){
 		case FT_FLAG_DFT:	
-			method_ = new dft;
+			method = new dft;
 			break;
 		case FT_FLAG_IDFT:
 			method = new idft;
@@ -48,12 +48,3 @@ ft* ft::get_r_method(const ift_flag_t flag){
 	return method;
 }
 
-/*
-void delete_f_method(){
-	delete method;
-}
-
-void delete_r_method(){
-	delete method;
-}
-*/
