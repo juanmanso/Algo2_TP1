@@ -81,10 +81,8 @@ class fft : public ft
 class ifft : public ft
 {
 	public:
-		virtual void calc(vector<complejo>&)
-		{
-		       	cout<<"ifft"<<endl;
-		}
+		virtual void calc(vector<complejo>&);
+
 		ifft(){}
 		~ifft(){ }
 
