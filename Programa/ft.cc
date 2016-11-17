@@ -122,9 +122,6 @@ void fft::calc(vector<complejo> &x){
 		vector<complejo> p(x.size()/2);
 		vector<complejo> q(x.size()/2);
 
-//		vector<complejo> P(x.size()/2):
-//		vector<complejo> Q(x.size()/2);
-
 		for(size_t k=0; k < x.size(); k++){
 			
 			if( k % 2 == 0)
@@ -132,20 +129,6 @@ void fft::calc(vector<complejo> &x){
 			else
 				q[(k-1)/2] = x[k];  // Copio los elems impares
 		}
-
-//		cout << "P = [";
-
-//		for(size_t i=0; i < p.size(); i++)
-//			cout << p[i] << " ";
-
-//		cout << "]" << endl;
-
-//		cout << "Q = [";
-	
-//		for(size_t j=0; j < q.size(); j++)
-//			cout << q[j] << " ";
-
-//		cout << "]" << endl;
 
 		fft::calc(p);
 		fft::calc(q);		
@@ -157,10 +140,35 @@ void fft::calc(vector<complejo> &x){
 
 	}	
 
-//	cout << "X[k] = [";
-//	
-//	for(size_t k=0; k < x.size(); k++)
-//		cout << x[k] << " ";
-//
-//	cout << "]" << endl;
+}
+
+void ifft::calc(vector<complejo> &x){
+
+	if(x.size() >= 2){
+		vector<complejo> p(x.size()/2);
+		vector<complejo> q(x.size()/2);
+
+		for(size_t k=0; k < x.size(); k++){
+			
+			if( k % 2 == 0)
+				p[k/2] = x[k];  // Copio los elems pares
+			else
+				q[(k-1)/2] = x[k];  // Copio los elems impares
+		}
+
+		ifft::calc(p);
+		ifft::calc(q);		
+
+		complejo WN( cos(2*M_PI/x.size()), sin(2*M_PI/x.size()));
+
+		for(size_t k=0; k < x.size(); k++)
+		{
+			x[k] = p[k % p.size()] + WN.pow(k)*q[k % q.size()];
+			x[k] = x[k]/2;
+		}
+
+
+	}	
+
+
 }
