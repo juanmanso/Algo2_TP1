@@ -113,7 +113,7 @@ proc(istream *is, ostream *os, const size_t &s_length, const vector<complejo> &t
 
 	// IMPRIMIR SEÑAL RESULTANTE
 
-		for(i=0; i<array.size() && ((*os)<<array[i]<<endl); i++)
+		for(i=0; i<array.size() && ((*os)<<array[i]<<""); i++)
 			array[i]=0;
 		
 		if(os->bad()){

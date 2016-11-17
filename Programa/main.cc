@@ -161,14 +161,12 @@ opt_forward_op(string const &arg)
 
 	// Innecesario pero sólo lo pongo para chequear
 	if (arg == (options+POS_F_OPT)->def_value) {
-		cout << "FFT defecto" << endl;
 		ft_flag=FT_FLAG_FFT;	
 	} 
 	
 	else { 
 		for(i=0; i<AMOUNT_OF_F_METHODS; i++){
 			if(FT_FLAGS[i]==aux){
-				cout << "FT = " << FT_FLAGS[i] << endl;
 				ft_flag= static_cast<ft_flag_t>(i);
 				break;
 			}
@@ -208,14 +206,12 @@ opt_reverse_op(string const &arg)
 
 	// Innecesario pero sólo lo pongo para chequear
 	if (arg == (options+POS_R_OPT)->def_value) {
-		cout << "IFFT defecto" << endl;
 		ift_flag=IFT_FLAG_IFFT;	
 	} 
 	
 	else { 
 		for(i=0; i<AMOUNT_OF_R_METHODS; i++){
 			if(IFT_FLAGS[i]==aux){
-				cout << "IFT = " << IFT_FLAGS[i] << endl;
 				ift_flag= static_cast<ift_flag_t> (i);
 				break;
 			}
