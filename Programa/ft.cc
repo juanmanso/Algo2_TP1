@@ -3,6 +3,7 @@
 #include "ft.h"
 #include <string>
 #include <iostream>
+#include <cmath.h>
 
 using namespace std;
 
@@ -48,3 +49,32 @@ ft* ft::get_r_method(const ift_flag_t flag){
 	return method;
 }
 
+void dft::calc(vector<complejo> &x){
+
+	// Esta es la funcion que realiza la DFT propiamente
+	// dicha, mediante el algoritmo "naive" - es decir
+	// simplemente calculando la serie de la definicion.
+
+	complejo suma;
+
+	complejo WN0(cos(2*M_PI/(x.size())), -sin(2*M_PI/(x.size())));
+	complejo WN(1);
+
+
+	// Hago la cuenta "in-place", reescribiendo el mismo
+	// vector x que me pasan por referencia de manera de 
+	// ahorrar memoria.
+
+	for(size_t i=0; i<x.size() ; i++){
+		suma += x[i]*WN;
+		WN *= WN0;
+	}	
+
+	WN = 1;
+
+	for(i=0; i < x.size(); i++){
+		x[i] = suma*WN
+		WN *= WN0;
+	}
+
+}	
