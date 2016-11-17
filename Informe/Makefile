@@ -10,7 +10,7 @@
 ## si es llamado y siempre. También se usa para evitar ambiguedades (como con el comando view)
 
 
-NAME_PROJECT = TP0
+NAME_PROJECT = TP1
 TEX = pdflatex
 SEC = ./Secciones/*
 OUTPUT_DIR = ../
