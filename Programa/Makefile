@@ -4,7 +4,7 @@ DIR_INCLUDE= -I.
 CXX = g++
 CXXARGS  = -ansi -pedantic -Wall -g
 CXXFLAGS = $(DIR_INCLUDE) $(CXXARGS)
-TEST_DIFF = diff -w
+TEST_DIFF = diff -b
 RM = -rm -f
 
 
