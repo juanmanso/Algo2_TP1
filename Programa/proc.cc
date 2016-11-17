@@ -28,6 +28,12 @@ proc(istream *is, ostream *os, const size_t &s_length, const vector<complejo> &t
 	ft_method=ft_method->get_f_method(ft_flag);
 	ift_method=ift_method->get_r_method(ift_flag);
 
+	// Estas variables las uso para redondear la salida
+	// de la secuencia de complejos:
+
+	double parte_real, parte_im;
+	complejo *aux2;
+
 
 	// VECTORIZAR LA ENTRADA
 //	********************************************
@@ -82,8 +88,31 @@ proc(istream *is, ostream *os, const size_t &s_length, const vector<complejo> &t
 
 		ift_method->calc(array);
 
+
+	// "EMPROLIJAR" SEÑAL DE SALIDA
+	// A las salidas muy pequeñas las plancho en 0
+	// para que sea mas legible.
+
+		for(i=0; i<array.size(); i++){
+			parte_real = array[i].re();
+			parte_im = array[i].im();
+
+			if(abs(parte_real) < 1e-12)
+				parte_real = 0;
+			if(abs(parte_im) < 1e-12)
+				parte_im = 0;
+
+
+			aux2 = new complejo(parte_real, parte_im);
+			array[i] = *aux2;
+			delete aux2;
+		}
+
+//		double prueba = 5.5;
+//		cout << "prueba = " << abs(prueba) << endl;
+
 	// IMPRIMIR SEÑAL RESULTANTE
-	//
+
 		for(i=0; i<array.size() && ((*os)<<array[i]<<endl); i++)
 			array[i]=0;
 		

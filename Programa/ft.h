@@ -59,10 +59,7 @@ class dft : public ft
 class idft : public ft
 {
 	public:
-		virtual void calc(vector<complejo>&)
-		{
-		       	cout<<"idft"<<endl;
-		}
+		virtual void calc(vector<complejo>&);
 
 		idft(){}
 		~idft(){}
