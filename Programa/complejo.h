@@ -22,6 +22,7 @@ public:
 	double abs2() const;
 	complejo const &conjugar();
 	complejo const conjugado() const;
+	complejo const pow(const size_t) const;
 	bool zero() const;
 
 	friend complejo const operator+(complejo const &, complejo const &);

@@ -3,7 +3,7 @@
 #include "ft.h"
 #include <string>
 #include <iostream>
-#include <cmath.h>
+#include <cmath>
 
 using namespace std;
 
@@ -59,22 +59,61 @@ void dft::calc(vector<complejo> &x){
 
 	complejo WN0(cos(2*M_PI/(x.size())), -sin(2*M_PI/(x.size())));
 	complejo WN(1);
+	complejo WNk(1);
 
+	cout << "N = " << x.size() << endl;
+
+	vector<complejo> aux(x.size());
 
 	// Hago la cuenta "in-place", reescribiendo el mismo
 	// vector x que me pasan por referencia de manera de 
 	// ahorrar memoria.
 
-	for(size_t i=0; i<x.size() ; i++){
-		suma += x[i]*WN;
-		WN *= WN0;
-	}	
+	complejo prueba(2);
+	prueba = prueba.pow(3);
 
-	WN = 1;
+	cout << "prueba = " << prueba << endl;
 
-	for(i=0; i < x.size(); i++){
-		x[i] = suma*WN
-		WN *= WN0;
+	for(size_t k=0; k < aux.size(); k++){
+//		WN = WNk;
+		WNk = WN0.pow(k);
+		suma = 0;
+		for(size_t n=0; n < x.size(); n++){
+			WN = WNk.pow(n);
+			suma += x[n]*WN;
+			WN *= WN;
+		}
+	
+		aux[k] = suma;
 	}
+
+
+	cout << "Aux = [";
+
+	for(size_t i=0; i<aux.size(); i++)
+		cout << aux[i] << " ";
+	cout << "]" << endl;
+	
+	x = aux;		
+
+//	for(size_t i=0; i < x.size(); i++)
+//		x[i] = aux[i];	
+		
+
+//	for(size_t i=0; i<x.size() ; i++){
+//		cout << "WN = " << WN << endl;
+//		suma += x[i]*WN;
+//		WN *= WN0;
+//	}	
+//
+//	WN = 1;
+
+//	cout << "Suma =  " << suma << endl;
+//
+//	for(size_t i=0; i < x.size(); i++){
+//		cout << "WN2 = " << WN << endl;
+//		x[i] = suma*WN;
+//		WN *= WN0;
+//	}
 
 }	

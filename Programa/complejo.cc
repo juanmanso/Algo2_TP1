@@ -92,6 +92,22 @@ complejo::conjugar()
 }
 
 complejo const
+complejo::pow(const size_t n) const
+{
+	complejo aux(re_, im_);
+
+	if(n == 0)
+		return complejo(1);
+
+	if(n == 1)
+		return *this;
+	
+	for(size_t i=0; i < n-1; i++)
+		aux *= *this;
+	return aux;
+}
+
+complejo const
 complejo::conjugado() const
 {
 	return complejo(re_, -im_);

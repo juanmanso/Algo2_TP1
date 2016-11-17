@@ -49,8 +49,7 @@ class ft
 class dft : public ft
 {
 	public:
-		virtual void calc(vector<complejo>&)
-		     	void dft_calc(vector<complejo>&);
+		virtual void calc(vector<complejo>&);
 		dft(){}
 		~dft(){}
 };
