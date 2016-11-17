@@ -127,10 +127,10 @@ void fft::calc(vector<complejo> &x){
 
 		for(size_t k=0; k < x.size(); k++){
 			
-			if( k % 2 )
+			if( k % 2 == 0)
 				p[k/2] = x[k];  // Copio los elems pares
 			else
-				q[k/2] = x[k];  // Copio los elems impares
+				q[(k-1)/2] = x[k];  // Copio los elems impares
 		}
 
 //		cout << "P = [";
@@ -157,10 +157,10 @@ void fft::calc(vector<complejo> &x){
 
 	}	
 
-	cout << "X[k] = [";
-	
-	for(size_t k=0; k < x.size(); k++)
-		cout << x[k] << " ";
-
-	cout << "]" << endl;
+//	cout << "X[k] = [";
+//	
+//	for(size_t k=0; k < x.size(); k++)
+//		cout << x[k] << " ";
+//
+//	cout << "]" << endl;
 }
